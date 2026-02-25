@@ -1,24 +1,26 @@
 {
-  "name": "MBA-CET Examination Simulator",
-  "short_name": "MBA-CET Exam",
-  "description": "Official MBA-CET mock examination simulator. Replicates the CET computer-based test environment for practice and assessment.",
+  "name": "MBA-CET Exam Simulator",
+  "short_name": "MBA-CET",
+  "description": "Official-grade MBA-CET computer-based test simulator. Answer marking, time management, question palette, and post-test review.",
   "start_url": "./index.html",
-  "display": "fullscreen",
-  "orientation": "landscape",
-  "background_color": "#e8e8e8",
-  "theme_color": "#1a2535",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f1f3d",
+  "theme_color": "#0f1f3d",
+  "lang": "en-IN",
   "categories": ["education", "productivity"],
   "icons": [
     {
-      "src": "icon-192.svg",
+      "src": "icons/icon-192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icon-512.svg",
+      "src": "icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ],

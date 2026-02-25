@@ -2,315 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#1a2535" />
-  <meta name="description" content="MBA-CET Official Examination Simulator" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0f1f3d" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-  <meta name="apple-mobile-web-app-title" content="MBA-CET Exam" />
-  <title>MBA-CET Examination Simulator</title>
+  <meta name="apple-mobile-web-app-title" content="MBA-CET" />
+  <meta name="description" content="MBA-CET Exam Simulator — Official-grade computer-based test simulation" />
+
+  <title>MBA-CET Exam Simulator</title>
+
   <link rel="manifest" href="manifest.json" />
-  <link rel="icon" href="icons/icon-192.svg" type="image/svg+xml" />
-  <link rel="apple-touch-icon" href="icons/icon-192.svg" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="icon" type="image/png" href="icons/icon-192.png" />
+
+  <!-- IBM Plex Sans for institutional feel -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-
-<!-- ═══════════════════════════════════════════════ -->
-<!-- SCREEN 1: SETUP                                  -->
-<!-- ═══════════════════════════════════════════════ -->
-<div id="screen-setup" class="screen active">
-  <div class="setup-wrapper">
-    <div class="setup-header">
-      <div class="setup-logo">
-        <span class="setup-logo-mark">▐</span>
-      </div>
-      <div class="setup-title-block">
-        <h1 class="setup-title">MBA–CET</h1>
-        <p class="setup-subtitle">Common Entrance Test — Examination Simulator</p>
-      </div>
-      <div class="setup-authority">
-        <span>Directorate of Technical Education</span>
-        <span>Government of Maharashtra</span>
-      </div>
-    </div>
-
-    <div class="setup-notice">
-      <span class="notice-icon">⚠</span>
-      <p>This is a secure examination environment. Ensure you have your question booklet before proceeding. All responses are stored locally on this device.</p>
-    </div>
-
-    <form id="setup-form" class="setup-form" autocomplete="off">
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="testName" class="form-label">TEST NAME / SESSION ID</label>
-          <input type="text" id="testName" class="form-input" value="MBA-CET 2025 — Mock Test 01" maxlength="60" required />
-        </div>
-
-        <div class="form-group">
-          <label for="candidateName" class="form-label">CANDIDATE NAME</label>
-          <input type="text" id="candidateName" class="form-input" placeholder="Enter your name" maxlength="80" required />
-        </div>
-
-        <div class="form-group">
-          <label for="totalQuestions" class="form-label">TOTAL QUESTIONS</label>
-          <input type="number" id="totalQuestions" class="form-input" value="200" min="10" max="300" required />
-        </div>
-
-        <div class="form-group">
-          <label for="duration" class="form-label">EXAM DURATION (minutes)</label>
-          <input type="number" id="duration" class="form-input" value="150" min="10" max="360" required />
-        </div>
-
-        <div class="form-group">
-          <label for="optionsCount" class="form-label">OPTIONS PER QUESTION</label>
-          <select id="optionsCount" class="form-input form-select">
-            <option value="4">4 options (A to D)</option>
-            <option value="5" selected>5 options (A to E)</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">SECTIONS (optional)</label>
-          <div class="section-inputs" id="sectionInputs">
-            <div class="section-row" data-idx="0">
-              <input type="text" class="form-input section-name" placeholder="Section name (e.g. Logical Reasoning)" />
-              <input type="number" class="form-input section-count" placeholder="Questions" min="1" max="300" />
-              <button type="button" class="btn-remove-section" onclick="removeSection(0)">✕</button>
-            </div>
-          </div>
-          <button type="button" class="btn-add-section" id="addSectionBtn">+ Add Section</button>
-        </div>
-      </div>
-
-      <div class="setup-actions">
-        <button type="submit" class="btn-primary" id="startBtn">
-          <span>START EXAMINATION</span>
-          <span class="btn-arrow">→</span>
-        </button>
-      </div>
-    </form>
-
-    <div class="setup-footer">
-      <p>Instructions: Read all questions carefully from the printed booklet. Use this interface only to mark and navigate answers. Do not close the browser window once the examination begins.</p>
+  <div id="app">
+    <div class="splash">
+      <div class="splash-logo">MBA-CET</div>
+      <div class="splash-sub">Exam Simulator</div>
+      <div class="splash-loading">Initializing...</div>
     </div>
   </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════ -->
-<!-- SCREEN 2: EXAM                                   -->
-<!-- ═══════════════════════════════════════════════ -->
-<div id="screen-exam" class="screen">
-
-  <!-- TOP BAR -->
-  <header class="exam-topbar">
-    <div class="topbar-left">
-      <span class="exam-test-name" id="examTestName">MBA-CET 2025</span>
-      <span class="topbar-divider">|</span>
-      <span class="exam-candidate-name" id="examCandidateName">Candidate</span>
-    </div>
-    <div class="topbar-center">
-      <div class="timer-container" id="timerContainer">
-        <span class="timer-label">TIME REMAINING</span>
-        <div class="timer-display" id="timerDisplay">02:30:00</div>
-      </div>
-    </div>
-    <div class="topbar-right">
-      <button class="btn-submit-exam" id="submitExamBtn">SUBMIT TEST</button>
-    </div>
-  </header>
-
-  <!-- MAIN EXAM AREA -->
-  <main class="exam-main">
-
-    <!-- QUESTION PANEL -->
-    <section class="question-panel" id="questionPanel">
-
-      <div class="question-header">
-        <div class="question-meta">
-          <span class="question-num-label">QUESTION</span>
-          <span class="question-num-display" id="qNumDisplay">1</span>
-          <span class="question-section-tag" id="qSectionTag"></span>
-        </div>
-        <div class="question-status-flags" id="qStatusFlags"></div>
-      </div>
-
-      <div class="question-body">
-        <div class="question-text-notice">
-          <span class="booklet-ref">📋</span>
-          <span>Refer to Question <strong id="qRefNum">1</strong> in your printed Question Booklet.</span>
-        </div>
-
-        <div class="options-container" id="optionsContainer">
-          <!-- Options rendered by JS -->
-        </div>
-      </div>
-
-      <div class="question-footer">
-        <div class="footer-left">
-          <button class="btn-exam btn-secondary" id="prevBtn">◀ PREVIOUS</button>
-          <button class="btn-exam btn-secondary" id="nextBtn">NEXT ▶</button>
-        </div>
-        <div class="footer-right">
-          <button class="btn-exam btn-mark" id="markBtn">MARK FOR REVIEW</button>
-          <button class="btn-exam btn-clear" id="clearBtn">CLEAR RESPONSE</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- SIDEBAR: PALETTE + LEGEND -->
-    <aside class="exam-sidebar">
-      <div class="sidebar-legend">
-        <div class="legend-title">ANSWER STATUS LEGEND</div>
-        <div class="legend-grid">
-          <div class="legend-item">
-            <span class="legend-dot status-not-visited"></span>
-            <span>Not Visited</span>
-          </div>
-          <div class="legend-item">
-            <span class="legend-dot status-visited"></span>
-            <span>Visited, Not Answered</span>
-          </div>
-          <div class="legend-item">
-            <span class="legend-dot status-answered"></span>
-            <span>Answered</span>
-          </div>
-          <div class="legend-item">
-            <span class="legend-dot status-marked"></span>
-            <span>Marked for Review</span>
-          </div>
-          <div class="legend-item">
-            <span class="legend-dot status-answered-marked"></span>
-            <span>Answered + Marked</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="palette-header">
-        <span>QUESTION PALETTE</span>
-        <span class="palette-count" id="paletteCount">0/200</span>
-      </div>
-
-      <!-- SECTION TABS (if sections defined) -->
-      <div class="section-tabs" id="sectionTabs"></div>
-
-      <div class="palette-grid" id="paletteGrid">
-        <!-- Rendered by JS -->
-      </div>
-
-      <div class="sidebar-stats">
-        <div class="stat-row">
-          <span class="stat-label">Answered</span>
-          <span class="stat-val" id="statAnswered">0</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">Not Answered</span>
-          <span class="stat-val" id="statUnanswered">0</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">Marked for Review</span>
-          <span class="stat-val" id="statMarked">0</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">Not Visited</span>
-          <span class="stat-val" id="statNotVisited">0</span>
-        </div>
-      </div>
-    </aside>
-
-  </main>
-</div>
-
-<!-- ═══════════════════════════════════════════════ -->
-<!-- SCREEN 3: RESULT                                 -->
-<!-- ═══════════════════════════════════════════════ -->
-<div id="screen-result" class="screen">
-  <div class="result-wrapper">
-    <div class="result-header">
-      <div class="result-header-left">
-        <h2 class="result-title">EXAMINATION COMPLETED</h2>
-        <p class="result-subtitle" id="resultTestName">MBA-CET 2025 — Mock Test 01</p>
-        <p class="result-candidate" id="resultCandidate">—</p>
-      </div>
-      <div class="result-header-right">
-        <div class="result-timestamp" id="resultTimestamp">—</div>
-      </div>
-    </div>
-
-    <div class="result-summary-grid">
-      <div class="summary-card">
-        <div class="summary-card-val" id="resTotalQ">—</div>
-        <div class="summary-card-label">Total Questions</div>
-      </div>
-      <div class="summary-card sc-answered">
-        <div class="summary-card-val" id="resAnswered">—</div>
-        <div class="summary-card-label">Attempted</div>
-      </div>
-      <div class="summary-card sc-unanswered">
-        <div class="summary-card-val" id="resUnanswered">—</div>
-        <div class="summary-card-label">Not Attempted</div>
-      </div>
-      <div class="summary-card sc-marked">
-        <div class="summary-card-val" id="resMarked">—</div>
-        <div class="summary-card-label">Marked for Review</div>
-      </div>
-      <div class="summary-card sc-visited">
-        <div class="summary-card-val" id="resVisited">—</div>
-        <div class="summary-card-label">Visited</div>
-      </div>
-    </div>
-
-    <div class="result-section-breakdown" id="resultSectionBreakdown"></div>
-
-    <div class="result-review-section">
-      <div class="review-header-bar">
-        <h3 class="review-header-title">RESPONSE SHEET</h3>
-        <div class="review-filter-bar">
-          <button class="btn-filter active" data-filter="all" onclick="filterReview('all')">All</button>
-          <button class="btn-filter" data-filter="answered" onclick="filterReview('answered')">Answered</button>
-          <button class="btn-filter" data-filter="unanswered" onclick="filterReview('unanswered')">Not Answered</button>
-          <button class="btn-filter" data-filter="marked" onclick="filterReview('marked')">Marked</button>
-        </div>
-      </div>
-      <div class="review-table-wrapper">
-        <table class="review-table" id="reviewTable">
-          <thead>
-            <tr>
-              <th>Q.No.</th>
-              <th>Section</th>
-              <th>Response Marked</th>
-              <th>Status</th>
-              <th>Marked for Review</th>
-            </tr>
-          </thead>
-          <tbody id="reviewTableBody">
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="result-actions">
-      <button class="btn-new-exam" onclick="startNewExam()">START NEW EXAMINATION</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODALS -->
-<div id="modalOverlay" class="modal-overlay">
-  <div class="modal-box" id="modalBox">
-    <div class="modal-title" id="modalTitle">Confirm Submission</div>
-    <div class="modal-body" id="modalBody"></div>
-    <div class="modal-actions" id="modalActions"></div>
-  </div>
-</div>
-
-<div id="timeWarningBanner" class="time-warning-banner hidden">
-  <span>⚠ WARNING — Only <span id="timeWarningText">15</span> minutes remaining in this examination.</span>
-</div>
-
-<script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
