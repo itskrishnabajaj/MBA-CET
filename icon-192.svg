@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <rect width="192" height="192" fill="#1a2535"/>
+  <rect x="0" y="0" width="18" height="192" fill="#253448"/>
+  <text x="30" y="78" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="42" font-weight="700" fill="#e8e8e8" letter-spacing="2">CET</text>
+  <text x="30" y="114" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="18" font-weight="400" fill="#8090a8" letter-spacing="3">MBA</text>
+  <line x1="30" y1="126" x2="162" y2="126" stroke="#4a5a70" stroke-width="1.5"/>
+  <text x="30" y="148" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="10" font-weight="400" fill="#5a6a80" letter-spacing="1.5">EXAM SIMULATOR</text>
+</svg>
