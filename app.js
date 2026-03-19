@@ -259,7 +259,7 @@ function navigateTo(screen, params = {}) {
   appState.screen = screen;
   if (params.testId   !== undefined) appState.currentTestId   = params.testId;
   if (params.question !== undefined) appState.currentQuestion = params.question;
-  if (params.from     !== undefined) appState.editingFrom     = params.from;
+  appState.editingFrom = params.from !== undefined ? params.from : null;
 
   render();
 }
@@ -576,6 +576,8 @@ function handleKeydown(e) {
   if (appState.screen !== 'exam') return;
   // Don't capture if focus is in an input
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  // Don't capture shortcuts when the submit dialog is open
+  if (document.getElementById('submit-modal')) return;
 
   switch (e.key) {
     case 'ArrowRight':
@@ -696,7 +698,7 @@ ${tests.map(t => {
   <div class="test-card-actions">
     ${t.status === 'active'
       ? `<button class="btn btn-primary btn-sm" onclick="resumeTest('${t.id}')">▶ Continue</button>`
-      : `<button class="btn btn-secondary btn-sm" onclick="navigateTo('review', {testId:'${t.id}', question:0})">Review</button>`
+      : `<button class="btn btn-secondary btn-sm" onclick="navigateTo('review', {testId:'${t.id}', question:0, from:'dashboard'})">Review</button>`
     }
     <button class="btn btn-secondary btn-sm" onclick="navigateTo('notes', {testId:'${t.id}', from:'dashboard'})">Notes</button>
     <button class="btn btn-secondary btn-sm" onclick="handleDeleteTest('${t.id}')">Delete</button>
@@ -847,7 +849,6 @@ function renderExam() {
 
   const qIdx = appState.currentQuestion;
   const q    = test.questions[qIdx];
-  const isCompleted = test.status === 'completed';
 
   return `
 <div class="exam-screen">
@@ -885,11 +886,11 @@ function renderExam() {
           ${OPTIONS.map(opt => `
           <div class="option-item${q.selected === opt ? ' selected' : ''}"
                id="opt-${opt}"
-               onclick="selectAnswer(${qIdx}, '${opt}')"
+               onclick="selectAnswer(appState.currentQuestion, '${opt}')"
                role="radio"
                aria-checked="${q.selected === opt}"
                tabindex="0"
-               onkeydown="if(event.key==='Enter'||event.key===' '){selectAnswer(${qIdx},'${opt}');}">
+               onkeydown="if(event.key==='Enter'||event.key===' '){selectAnswer(appState.currentQuestion,'${opt}');}">
             <span class="option-bubble">${opt}</span>
             <span class="option-text-label">Option ${opt}</span>
           </div>`).join('')}
@@ -907,13 +908,13 @@ function renderExam() {
           </button>
           <button class="btn ${q.marked ? 'btn-orange' : 'btn-mark'} btn-sm"
                   id="mark-review-btn"
-                  onclick="toggleMarkForReview(${qIdx})">
+                  onclick="toggleMarkForReview(appState.currentQuestion)">
             ${q.marked ? 'Unmark Review' : 'Mark for Review'}
           </button>
         </div>
         <div class="controls-group" style="margin-left:auto">
           <button class="btn btn-secondary btn-sm"
-                  onclick="clearResponse(${qIdx})">
+                  onclick="clearResponse(appState.currentQuestion)">
             Clear
           </button>
           <button class="btn btn-primary btn-sm" id="next-btn"
@@ -1054,7 +1055,7 @@ function renderResults() {
 
       <div class="result-actions">
         <button class="btn btn-primary btn-full"
-                onclick="navigateTo('review', {testId:'${test.id}', question:0})">
+                onclick="navigateTo('review', {testId:'${test.id}', question:0, from:'results'})">
           Review Questions &amp; Enter Correct Answers
         </button>
         <button class="btn btn-secondary btn-full"
@@ -1098,10 +1099,14 @@ function renderReview() {
 
   const correctVal = q.correct || '';
 
+  const backFn = appState.editingFrom === 'results'
+    ? `saveReviewData(); navigateTo('results', {testId:'${test.id}'})`
+    : `saveReviewData(); navigateTo('dashboard')`;
+
   return `
 <div class="review-screen">
   <div class="screen-header">
-    <button class="back-btn" onclick="saveReviewData(); navigateTo('dashboard')" aria-label="Back">&#8592;</button>
+    <button class="back-btn" onclick="${backFn}" aria-label="Back">&#8592;</button>
     <h1>Question Review — ${esc(test.name)}</h1>
   </div>
 
