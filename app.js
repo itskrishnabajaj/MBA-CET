@@ -886,11 +886,11 @@ function renderExam() {
           ${OPTIONS.map(opt => `
           <div class="option-item${q.selected === opt ? ' selected' : ''}"
                id="opt-${opt}"
-               onclick="selectAnswer(${qIdx}, '${opt}')"
+               onclick="selectAnswer(appState.currentQuestion, '${opt}')"
                role="radio"
                aria-checked="${q.selected === opt}"
                tabindex="0"
-               onkeydown="if(event.key==='Enter'||event.key===' '){selectAnswer(${qIdx},'${opt}');}">
+               onkeydown="if(event.key==='Enter'||event.key===' '){selectAnswer(appState.currentQuestion,'${opt}');}">
             <span class="option-bubble">${opt}</span>
             <span class="option-text-label">Option ${opt}</span>
           </div>`).join('')}
@@ -908,13 +908,13 @@ function renderExam() {
           </button>
           <button class="btn ${q.marked ? 'btn-orange' : 'btn-mark'} btn-sm"
                   id="mark-review-btn"
-                  onclick="toggleMarkForReview(${qIdx})">
+                  onclick="toggleMarkForReview(appState.currentQuestion)">
             ${q.marked ? 'Unmark Review' : 'Mark for Review'}
           </button>
         </div>
         <div class="controls-group" style="margin-left:auto">
           <button class="btn btn-secondary btn-sm"
-                  onclick="clearResponse(${qIdx})">
+                  onclick="clearResponse(appState.currentQuestion)">
             Clear
           </button>
           <button class="btn btn-primary btn-sm" id="next-btn"
